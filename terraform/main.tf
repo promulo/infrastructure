@@ -38,9 +38,8 @@ resource "digitalocean_droplet" "saltmaster" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo dnf update",
-      "sudo dnf upgrade -y",
-      "sudo dnf install salt-master -y",
+      "sudo dnf -y upgrade --refresh",
+      "sudo dnf -y install salt-master",
       "sudo systemctl enable salt-master",
       "sudo systemctl start salt-master"
     ]
