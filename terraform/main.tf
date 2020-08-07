@@ -5,13 +5,13 @@ provider "digitalocean" {
 resource "digitalocean_project" "core" {
   name        = "core"
   description = "Core infrastructure resources"
+  purpose     = "Operational / Developer tooling"
 }
 
 resource "digitalocean_project" "blog" {
   name        = "blog"
   description = "My own hosted instance of WriteFreely"
   purpose     = "Website or blog"
-  environment = "Development"
 }
 
 resource "digitalocean_vpc" "blog-vpc" {
