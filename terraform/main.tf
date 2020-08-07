@@ -2,6 +2,11 @@ provider "digitalocean" {
     token = var.do_api_token
 }
 
+resource "digitalocean_project" "core" {
+  name        = "core"
+  description = "Core infrastructure resources"
+}
+
 resource "digitalocean_project" "blog" {
   name        = "blog"
   description = "My own hosted instance of WriteFreely"
@@ -38,10 +43,17 @@ resource "digitalocean_droplet" "saltmaster" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo dnf -y upgrade --refresh",
-      "sudo dnf -y install salt-master",
-      "sudo systemctl enable salt-master",
-      "sudo systemctl start salt-master"
+      "dnf -y upgrade --refresh",
+      "dnf -y install salt-master",
+      "systemctl enable salt-master",
+      "reboot now"
     ]
   }
+}
+
+resource "digitalocean_project_resources" "core-resources" {
+  project = digitalocean_project.core.id
+  resources = [
+    digitalocean_droplet.saltmaster.urn
+  ]
 }
