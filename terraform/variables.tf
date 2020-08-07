@@ -5,5 +5,9 @@ variable "do_api_token" {
 }
 
 variable "ssh_key_default" {
-    description = "Default SSH key"
+    description = "Default public SSH key"
+}
+
+variable "ssh_key_default_priv" {
+    description = "Default private SSH key (for provision)"
 }
