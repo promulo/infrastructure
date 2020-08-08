@@ -2,10 +2,17 @@ provider "digitalocean" {
     token = var.do_api_token
 }
 
+// FIXME: remove this resource from Terraform
+resource "digitalocean_vpc" "blog-vpc" {
+  name     = "blog-network"
+  region   = "fra1"
+  ip_range = "10.0.0.0/24"
+}
+
 resource "digitalocean_vpc" "default" {
   name     = "default-network"
   region   = "fra1"
-  ip_range = "10.0.0.0/24"
+  ip_range = "10.1.0.0/24"
 }
 
 resource "digitalocean_ssh_key" "default" {
