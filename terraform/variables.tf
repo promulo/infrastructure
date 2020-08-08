@@ -8,6 +8,10 @@ variable "ssh_key_default" {
     description = "Default public SSH key"
 }
 
-variable "ssh_key_default_priv" {
-    description = "Default private SSH key (for provision)"
+variable "base_master_image_id" {
+    description = "Image ID for base master"
+}
+
+variable "base_minion_image_id" {
+    description = "Image ID for base minion"
 }
