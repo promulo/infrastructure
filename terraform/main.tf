@@ -2,6 +2,14 @@ provider "digitalocean" {
     token = var.do_api_token
 }
 
+data "template_file" "minion_user_data" {
+  template = "${file("templates/minion_user_data.tpl")}"
+
+  vars = {
+    saltmaster_ip = "${digitalocean_droplet.saltmaster.ipv4_address_private}"
+  }
+}
+
 // FIXME: remove this resource from Terraform
 resource "digitalocean_vpc" "blog-vpc" {
   name     = "blog-network"
@@ -48,6 +56,7 @@ resource "digitalocean_droplet" "minikube" {
   ]
   private_networking = true
   vpc_uuid = digitalocean_vpc.default.id
+  user_data = data.template_file.minion_user_data.rendered
 }
 
 resource "digitalocean_project_resources" "core_resources" {
