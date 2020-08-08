@@ -56,7 +56,7 @@ resource "digitalocean_droplet" "minikube" {
   ]
   private_networking = true
   vpc_uuid = digitalocean_vpc.default.id
-  user_data = ${data.template_file.minion_user_data.rendered}
+  user_data = data.template_file.minion_user_data.rendered
 }
 
 resource "digitalocean_project_resources" "core_resources" {
