@@ -2,20 +2,8 @@ provider "digitalocean" {
     token = var.do_api_token
 }
 
-resource "digitalocean_project" "core" {
-  name        = "core"
-  description = "Core infrastructure resources"
-  purpose     = "Operational / Developer tooling"
-}
-
-resource "digitalocean_project" "blog" {
-  name        = "blog"
-  description = "My own hosted instance of WriteFreely"
-  purpose     = "Website or blog"
-}
-
-resource "digitalocean_vpc" "blog-vpc" {
-  name     = "blog-network"
+resource "digitalocean_vpc" "default" {
+  name     = "default-network"
   region   = "fra1"
   ip_range = "10.0.0.0/24"
 }
@@ -25,33 +13,25 @@ resource "digitalocean_ssh_key" "default" {
   public_key = var.ssh_key_default
 }
 
-resource "digitalocean_droplet" "saltmaster" {
-  image    = "fedora-32-x64"
-  name     = "saltmaster"
-  region   = "fra1"
-  size     = "s-1vcpu-1gb"
-  ssh_keys = [digitalocean_ssh_key.default.fingerprint]
-  vpc_uuid = digitalocean_vpc.blog-vpc.id
-
-  connection {
-    host = self.ipv4_address
-    user = "root"
-    type = "ssh"
-    private_key = var.ssh_key_default_priv
-    timeout = "2m"
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "dnf -y upgrade --refresh",
-      "dnf -y install salt-master",
-      "systemctl enable salt-master",
-      "reboot now"
-    ]
-  }
+resource "digitalocean_project" "core" {
+  name        = "core"
+  description = "Core infrastructure resources"
+  purpose     = "Operational / Developer tooling"
 }
 
-resource "digitalocean_project_resources" "core-resources" {
+resource "digitalocean_droplet" "saltmaster" {
+  image    = var.base_master_image_id
+  name     = "salt"
+  region   = "fra1"
+  size     = "s-1vcpu-1gb"
+  ssh_keys = [
+    digitalocean_ssh_key.default.fingerprint
+  ]
+  private_networking = true
+  vpc_uuid = digitalocean_vpc.default.id
+}
+
+resource "digitalocean_project_resources" "core_resources" {
   project = digitalocean_project.core.id
   resources = [
     digitalocean_droplet.saltmaster.urn
