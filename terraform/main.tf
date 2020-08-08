@@ -6,7 +6,7 @@ data "template_file" "minion_user_data" {
   template = "${file("minion_user_data.tpl")}"
 
   vars = {
-    saltmaster_ip = "${digitalocean_droplet.saltmaster.private_ip}"
+    saltmaster_ip = "${digitalocean_droplet.saltmaster.ipv4_address_private}"
   }
 }
 
