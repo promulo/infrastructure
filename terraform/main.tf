@@ -40,7 +40,7 @@ resource "digitalocean_droplet" "saltmaster" {
 
 resource "digitalocean_droplet" "minikube" {
   image    = var.base_minion_image_id
-  name     = "salt"
+  name     = "minikube"
   region   = "fra1"
   size     = "s-2vcpu-2gb"
   ssh_keys = [
@@ -53,6 +53,7 @@ resource "digitalocean_droplet" "minikube" {
 resource "digitalocean_project_resources" "core_resources" {
   project = digitalocean_project.core.id
   resources = [
-    digitalocean_droplet.saltmaster.urn
+    digitalocean_droplet.saltmaster.urn,
+    digitalocean_droplet.minikube.urn
   ]
 }
