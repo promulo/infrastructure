@@ -3,7 +3,10 @@ provider "digitalocean" {
 }
 
 data "template_file" "minion_user_data" {
-  template = "${file("templates/minion_user_data.tpl")}"
+  template = <<~EOT
+    #!/bin/bash
+    echo "$${saltmaster_ip} salt" >> /etc/hosts
+  EOT
 
   vars = {
     saltmaster_ip = "${digitalocean_droplet.saltmaster.ipv4_address_private}"
