@@ -5,7 +5,7 @@
     "builders": [
         {
             "type": "digitalocean",
-            "snapshot_name": "base-salt-minion-{{ timestamp }}",
+            "snapshot_name": "base-salt-master-{{ timestamp }}",
             "api_token": "{{ user `api_token` }}",
             "image": "fedora-32-x64",
             "region": "fra1",
