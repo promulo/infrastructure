@@ -3,6 +3,7 @@ provider "digitalocean" {
 }
 
 resource "digitalocean_vpc" "default" {
+  id       = "b0870ed3-e6b9-46ea-b89e-fa7d25f7344e"
   name     = "default-network"
   region   = "fra1"
   ip_range = "10.0.0.0/24"
