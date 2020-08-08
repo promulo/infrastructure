@@ -38,6 +38,18 @@ resource "digitalocean_droplet" "saltmaster" {
   vpc_uuid = digitalocean_vpc.default.id
 }
 
+resource "digitalocean_droplet" "minikube" {
+  image    = var.base_minion_image_id
+  name     = "salt"
+  region   = "fra1"
+  size     = "s-2vcpu-2gb"
+  ssh_keys = [
+    digitalocean_ssh_key.default.fingerprint
+  ]
+  private_networking = true
+  vpc_uuid = digitalocean_vpc.default.id
+}
+
 resource "digitalocean_project_resources" "core_resources" {
   project = digitalocean_project.core.id
   resources = [
