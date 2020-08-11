@@ -10,6 +10,14 @@ data "template_file" "minion_user_data" {
   }
 }
 
+data "template_file" "master_user_data" {
+  template = "${file("templates/master_user_data.tpl")}"
+
+  vars = {
+    github_ssh_key = var.private_ssh_key_github
+  }
+}
+
 resource "digitalocean_vpc" "default" {
   name     = "default-network"
   region   = "fra1"
@@ -37,6 +45,7 @@ resource "digitalocean_droplet" "saltmaster" {
   ]
   private_networking = true
   vpc_uuid = digitalocean_vpc.default.id
+  user_data = data.template_file.master_user_data.rendered
 }
 
 resource "digitalocean_droplet" "minikube" {
